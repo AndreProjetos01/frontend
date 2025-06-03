@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class GpsComponent implements OnInit {
   dataResponse: any;
+  isAlert: boolean = false;
   center: google.maps.LatLngLiteral = {
     lat: -8.11753512553773,
     lng: -34.8996876037263,
@@ -24,17 +25,44 @@ export class GpsComponent implements OnInit {
     lng: -34.90020056865428,
   };
 
-  isAlert: boolean = false;
+   areaDestino = [
+    { lat: -8.116557545023289, lng: -34.90061340512893 },
+    { lat: -8.11706471483465, lng: -34.89960489450139 },
+    { lat: -8.117816174695255, lng: -34.900066234461335 },
+    { lat: -8.117497534646908, lng: -34.900803841968184 },
+  ];
 
   constructor(private readonly _gpsService: GpsService) {}
 
   ngOnInit(): void {
-    this.getLocation();
+    setTimeout(() => {
+      this.getLocation();
+    }, 5000);
   }
 
-  getLocation() {
+ getLocation() {
     this._gpsService.getLocation().subscribe((response) => {
       this.dataResponse = response;
+
+      // Atualize as coordenadas do marcador com os dados recebidos (ajuste conforme seu backend)
+      this.markerLatLong = {
+        lat: response.lat,
+        lng: response.lng,
+      };
+
+      this.verificarSeEstaNaArea(this.markerLatLong);
     });
+  }
+
+  verificarSeEstaNaArea(posicao: google.maps.LatLngLiteral) {
+    const ponto = new google.maps.LatLng(posicao.lat, posicao.lng);
+
+    const poligono = new google.maps.Polygon({
+      paths: this.areaDestino,
+    });
+
+    const dentro = google.maps.geometry.poly.containsLocation(ponto, poligono);
+
+    this.isAlert = !dentro;
   }
 }
