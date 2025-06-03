@@ -1,0 +1,26 @@
+<div class="pet-tracker">
+  <div class="pet-tracker__title">
+    <h2>Sistema de rastreamento</h2>
+    <p>Direção: {{ this.dataResponse?.direcao }}</p>
+</div>
+<p class="ml-5">Última atualização: {{ this.dataResponse?.timestamp | date }}</p>
+  <div class="pet-tracker__map">
+    <google-map height="430px" width="100%" [zoom]="12" [center]="center">
+        <map-marker [position]="markerLatLong"></map-marker>
+    </google-map>
+  </div>
+
+  <div class="pet-tracker__warn">
+    <div class="alert alert-danger" role="alert" *ngIf="isAlert">
+      <b>Aviso!</b> Saiu da rota prevista.
+    </div>
+    <div class="alert alert-success" role="alert" *ngIf="!isAlert">
+      Está dentro da área de segurança.
+    </div>
+  </div>
+
+  <div class="pet-tracker__buttons">
+    <a routerLink="/" class="btn btn-primary mt-5">Home</a>
+    <a routerLink="/gps" class="btn btn-primary mt-5">Histórico</a>
+  </div>
+</div>

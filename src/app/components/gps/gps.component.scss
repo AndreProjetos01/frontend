@@ -1,0 +1,56 @@
+.pet-tracker {
+  padding: 1rem;
+
+  &__title {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  &__map {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+
+    google-map {
+      width: 95%;
+      max-width: 450px;
+      height: 300px;
+    }
+  }
+
+  &__warn {
+    width: 100%;
+    max-width: 450px;
+    margin: auto;
+    padding: 0 1rem;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    a {
+      margin: 0;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .pet-tracker {
+    &__map {
+      google-map {
+        height: 450px;
+        width: 98%;
+      }
+    }
+
+    &__warn {
+      padding: 0;
+    }
+  }
+}
