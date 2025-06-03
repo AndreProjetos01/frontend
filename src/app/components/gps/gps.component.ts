@@ -35,9 +35,11 @@ export class GpsComponent implements OnInit {
   constructor(private readonly _gpsService: GpsService) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.getLocation();
-    }, 5000);
+    this.getLocation();
+
+    // setInterval(() => {
+    //   this.getLocation();
+    // }, 5000);
   }
 
  getLocation() {
@@ -46,23 +48,32 @@ export class GpsComponent implements OnInit {
 
       // Atualize as coordenadas do marcador com os dados recebidos (ajuste conforme seu backend)
       this.markerLatLong = {
-        lat: response.lat,
-        lng: response.lng,
+        lat: response.local.lat,
+        lng: response.local.lon,
       };
 
       this.verificarSeEstaNaArea(this.markerLatLong);
     });
   }
 
-  verificarSeEstaNaArea(posicao: google.maps.LatLngLiteral) {
-    const ponto = new google.maps.LatLng(posicao.lat, posicao.lng);
+  verificarSeEstaNaArea(posicao: { lat: number; lng: number }) {
+  const x = posicao.lat;
+  const y = posicao.lng;
 
-    const poligono = new google.maps.Polygon({
-      paths: this.areaDestino,
-    });
+  let dentro = false;
 
-    const dentro = google.maps.geometry.poly.containsLocation(ponto, poligono);
+  for (let i = 0, j = this.areaDestino.length - 1; i < this.areaDestino.length; j = i++) {
+    const xi = this.areaDestino[i].lat, yi = this.areaDestino[i].lng;
+    const xj = this.areaDestino[j].lat, yj = this.areaDestino[j].lng;
 
-    this.isAlert = !dentro;
+    const intersect =
+      yi > y !== yj > y &&
+      x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+
+    if (intersect) dentro = !dentro;
   }
+
+  this.isAlert = !dentro;
+}
+
 }
